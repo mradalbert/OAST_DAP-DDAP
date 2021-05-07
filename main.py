@@ -1,11 +1,15 @@
 import os
 
+from libtopo import TopologyParser
+
+
 def modeChooser():
     modes = ["DAP", "DDAP"]
     mode = ""
     while mode.upper() not in modes:
         mode = input("Choose problem type to solve DAP or DDAP[" + DEFAULT_MODE + "]: ") or DEFAULT_MODE
     return mode
+
 
 def stopCriterionChooser():
     criteria = ["TIME", "GENERATIONS", "MUTATIONS", "NO_PROGRESS"]
@@ -18,6 +22,7 @@ def stopCriterionChooser():
         criterion = input("Choose stop criterion[" + DEFAULT_STOP_CRITERION + "]: ") or DEFAULT_STOP_CRITERION
     return criterion
 
+
 def populationChooser():
     population = 0
     while population < 1:
@@ -27,41 +32,50 @@ def populationChooser():
             continue
     return population
 
+
 def stopCriterionTimeChooser():
     time = 0
     while time < 1:
         try:
-            time = int(input("Set time limit in seconds[" + str(DEFAULT_STOP_CRITERION_TIME) + "]: ") or DEFAULT_STOP_CRITERION_TIME)
+            time = int(input(
+                "Set time limit in seconds[" + str(DEFAULT_STOP_CRITERION_TIME) + "]: ") or DEFAULT_STOP_CRITERION_TIME)
         except ValueError:
             continue
     return time
+
 
 def stopCriterionGenerationsChooser():
     generations = 0
     while generations < 1:
         try:
-            generations = int(input("Set generations limit[" + str(DEFAULT_STOP_CRITERION_GENERATIONS) + "]: ") or DEFAULT_STOP_CRITERION_GENERATIONS)
+            generations = int(input("Set generations limit[" + str(
+                DEFAULT_STOP_CRITERION_GENERATIONS) + "]: ") or DEFAULT_STOP_CRITERION_GENERATIONS)
         except ValueError:
             continue
     return generations
+
 
 def stopCriterionMutationsChooser():
     mutations = 0
     while mutations < 1:
         try:
-            mutations = int(input("Set mutations limit[" + str(DEFAULT_STOP_CRITERION_MUTATIONS) + "]: ") or DEFAULT_STOP_CRITERION_MUTATIONS)
+            mutations = int(input("Set mutations limit[" + str(
+                DEFAULT_STOP_CRITERION_MUTATIONS) + "]: ") or DEFAULT_STOP_CRITERION_MUTATIONS)
         except ValueError:
             continue
     return mutations
 
-def stopCriterionNoProgressGeneratonsChooser():
+
+def stopCriterionNoProgressGenerationsChooser():
     generations = 0
     while generations < 1:
         try:
-            generations = int(input("Set no progress generations limit[" + str(DEFAULT_STOP_CRITERION_NO_PROGRESS_GENERATIONS) + "]: ") or DEFAULT_STOP_CRITERION_NO_PROGRESS_GENERATIONS)
+            generations = int(input("Set no progress generations limit[" + str(
+                DEFAULT_STOP_CRITERION_NO_PROGRESS_GENERATIONS) + "]: ") or DEFAULT_STOP_CRITERION_NO_PROGRESS_GENERATIONS)
         except ValueError:
             continue
     return generations
+
 
 def generatorSeedChooser():
     seed = 0
@@ -72,31 +86,36 @@ def generatorSeedChooser():
             continue
     return seed
 
+
 def geneCrossoverProbabilityChooser():
     probability = -1
     while probability < 0:
         try:
-            probability = float(input("Set gene crossover probability[" + str(DEFAULT_GENE_CROSSOVER_PROBABILITY) + "]: ") or DEFAULT_GENE_CROSSOVER_PROBABILITY)
+            probability = float(input("Set gene crossover probability[" + str(
+                DEFAULT_GENE_CROSSOVER_PROBABILITY) + "]: ") or DEFAULT_GENE_CROSSOVER_PROBABILITY)
             if probability > 1:
                 continue
         except ValueError:
             continue
     return probability
+
 
 def geneMutationProbabilityChooser():
     probability = -1
     while probability < 0:
         try:
-            probability = float(input("Set gene mutation probability[" + str(DEFAULT_GENE_MUTATION_PROBABILITY) + "]: ") or DEFAULT_GENE_MUTATION_PROBABILITY)
+            probability = float(input("Set gene mutation probability[" + str(
+                DEFAULT_GENE_MUTATION_PROBABILITY) + "]: ") or DEFAULT_GENE_MUTATION_PROBABILITY)
             if probability > 1:
                 continue
         except ValueError:
             continue
     return probability
 
+
 def fileChooser():
     allfiles = os.listdir(INPUT_DIRECTORY_PATH)
-    files=[]
+    files = []
     for f in allfiles:
         if f.endswith(".txt"):
             files.append(f)
@@ -110,12 +129,13 @@ def fileChooser():
     while not filename:
         try:
             i = int(input("Choose file[1]: ") or 1)
-            if i < 1  or i > len(files):
+            if i < 1 or i > len(files):
                 continue
             filename = INPUT_DIRECTORY_PATH + "/" + files[i - 1]
         except ValueError:
             continue
     return filename
+
 
 # Main program function
 if __name__ == '__main__':
@@ -150,9 +170,11 @@ if __name__ == '__main__':
     elif STOP_CRITERION == "MUTATIONS":
         STOP_CRITERION_VALUE = stopCriterionMutationsChooser()
     elif STOP_CRITERION == "NO_PROGRESS":
-        STOP_CRITERION_VALUE = stopCriterionNoProgressGeneratonsChooser()
+        STOP_CRITERION_VALUE = stopCriterionNoProgressGenerationsChooser()
     else:
         print("Ha! You found a bug. Report it to project maintainer :)")
         print("Program panic. Exiting...")
         quit()
 
+    # Parse network topology file
+    network = TopologyParser.loadTopologyFromFile(INPUT_FILE_PATH)
