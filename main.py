@@ -1,5 +1,6 @@
 import os
 
+from libevo import EvolutionaryOptimizer
 from libtopo import TopologyParser
 
 
@@ -8,6 +9,8 @@ def modeChooser():
     mode = ""
     while mode.upper() not in modes:
         mode = input("Choose problem type to solve DAP or DDAP[" + DEFAULT_MODE + "]: ") or DEFAULT_MODE
+
+    mode = mode.upper()
     return mode
 
 
@@ -20,6 +23,8 @@ def stopCriterionChooser():
     criterion = ""
     while criterion.upper() not in criteria:
         criterion = input("Choose stop criterion[" + DEFAULT_STOP_CRITERION + "]: ") or DEFAULT_STOP_CRITERION
+
+    criterion = criterion.upper()
     return criterion
 
 
@@ -128,7 +133,7 @@ def fileChooser():
     filename = ""
     while not filename:
         try:
-            i = int(input("Choose file[1]: ") or 1)
+            i = int(input("Choose file[3]: ") or 3)
             if i < 1 or i > len(files):
                 continue
             filename = INPUT_DIRECTORY_PATH + "/" + files[i - 1]
@@ -145,9 +150,9 @@ if __name__ == '__main__':
     DEFAULT_POPULATION = 500
     DEFAULT_GENE_CROSSOVER_PROBABILITY = 0.5
     DEFAULT_GENE_MUTATION_PROBABILITY = 0.05
-    DEFAULT_STOP_CRITERION = "TIME"
+    DEFAULT_STOP_CRITERION = "NO_PROGRESS"
     DEFAULT_STOP_CRITERION_TIME = 500
-    DEFAULT_STOP_CRITERION_GENERATIONS = 1000
+    DEFAULT_STOP_CRITERION_GENERATIONS = 250
     DEFAULT_STOP_CRITERION_MUTATIONS = 5000
     DEFAULT_STOP_CRITERION_NO_PROGRESS_GENERATIONS = 50
     DEFAULT_GENERATOR_SEED = 19258
@@ -178,3 +183,7 @@ if __name__ == '__main__':
 
     # Parse network topology file
     network = TopologyParser.loadTopologyFromFile(INPUT_FILE_PATH)
+
+    optimizer = EvolutionaryOptimizer(network, MODE, POPULATION, GENE_CROSSOVER_PROBABILITY, GENE_MUTATION_PROBABILITY,
+                                      GENERATOR_SEED, STOP_CRITERION, STOP_CRITERION_VALUE, INPUT_FILE_PATH)
+    optimizer.optimize()
